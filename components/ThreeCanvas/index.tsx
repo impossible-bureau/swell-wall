@@ -1,16 +1,17 @@
 import { Canvas } from '@react-three/fiber';
-import { useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import CameraSettings from './CameraSettings';
 // import Signature from '../Signature';
 import { extend } from '@react-three/fiber';
 
 // import { MeshLine, MeshLineMaterial } from 'three.meshline';
 import styled from 'styled-components';
-import ThreeGrid from '../Grid/inde';
 
 // extend({ MeshLine, MeshLineMaterial });
 
-export type ThreeCanvasProps = {};
+export type ThreeCanvasProps = {
+  children: ReactNode;
+};
 
 const ThreeDiv = styled.div`
   position: fixed;
@@ -21,7 +22,7 @@ const ThreeDiv = styled.div`
   background: white;
 `;
 
-const ThreeCanvas = ({}: ThreeCanvasProps) => {
+const ThreeCanvas = ({ children }: ThreeCanvasProps) => {
   const dpr = global?.window?.devicePixelRatio || 1;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,7 +32,7 @@ const ThreeCanvas = ({}: ThreeCanvasProps) => {
       <Canvas dpr={[dpr, dpr]} ref={canvasRef}>
         <CameraSettings />
         {/* <Signature /> */}
-        <ThreeGrid />
+        {children}
       </Canvas>
     </ThreeDiv>
   );

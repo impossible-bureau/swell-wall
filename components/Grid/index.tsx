@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useRef } from 'react';
+import { Socket, io } from 'socket.io-client';
 import _ from 'lodash';
 import * as THREE from 'three';
 import { BufferGeometry, Group, Points, PointsMaterial } from 'three';
@@ -13,6 +14,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import { gsap } from 'gsap';
 import { AppContext } from 'pages/_app';
+import { uid } from 'uid';
 
 const TOTAL_DOTS = 60000;
 const positions = new Float32Array(_.map(_.range(0, TOTAL_DOTS * 3), () => 0));
@@ -30,6 +32,14 @@ const COL_WIDTH = 4;
 const ROW_HEIGHT = 4;
 const STROKE_LENGTH = 60;
 
+console.log(
+  'process.env.NEXT_PUBLIC_SOCKET_URL:',
+  process.env.NEXT_PUBLIC_SOCKET_URL,
+);
+
+const socketUrl =
+  process.env.NEXT_PUBLIC_SOCKET_URL || 'http://jeff.local:3001';
+
 const ThreeGrid = ({}: ThreeGridProps) => {
   const { fontsLoaded } = useContext(AppContext);
   const { size } = useThree();
@@ -43,6 +53,10 @@ const ThreeGrid = ({}: ThreeGridProps) => {
   const strokesUniformRef = useRef<THREE.Vector3[]>(
     _.map(_.range(0, STROKE_LENGTH), () => new THREE.Vector3(200, 200, 0)),
   );
+
+  // socket
+  const socket = useRef<Socket | null>(null);
+  const socketIdRef = useRef(uid(6));
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -114,6 +128,21 @@ const ThreeGrid = ({}: ThreeGridProps) => {
 
   useEffect(() => {
     createMaterial();
+
+    socket.current = io(socketUrl);
+    socket.current.emit('site-join-room', 'swell-wall');
+    socket.current.on('touch-move', arg => {
+      const data = JSON.parse(arg);
+
+      gsap.to(mouseRef.current, {
+        x: data.x * global?.window?.innerWidth - global?.window?.innerWidth / 2,
+        y:
+          data.y * global?.window?.innerHeight -
+          global?.window?.innerHeight / 2,
+        duration: 0.5,
+        onUpdate: updateStroke,
+      });
+    });
   }, []);
 
   useEffect(() => {

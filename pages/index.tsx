@@ -10,6 +10,8 @@ import DribbbleIcon from '@/components/atoms/DribbbleIcon';
 import { useContext, useEffect, useRef } from 'react';
 import { AppContext } from 'pages/_app';
 import { gsap, Expo } from 'gsap';
+import ThreeGrid from '@/components/Grid';
+import RemotePrompt from '@/components/RemotePrompt';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -86,9 +88,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ThreeCanvas />
+      <ThreeCanvas>
+        <ThreeGrid />;
+      </ThreeCanvas>
       <Foreground>
-        <TextBox ref={textBoxRef}>
+        {/* <TextBox ref={textBoxRef}>
           <TextContent>
             <H1>jeffyamada™</H1>
             <Icons>
@@ -103,7 +107,8 @@ export default function Home() {
               </a>
             </Icons>
           </TextContent>
-        </TextBox>
+        </TextBox> */}
+        <RemotePrompt />
       </Foreground>
     </>
   );

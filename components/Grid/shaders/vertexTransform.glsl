@@ -14,9 +14,9 @@ position.y = gridY;
 
 float random = aRandom * 0.025;
 float mouseDistance = distance(vec2(gridX, gridY), vec2(uMouseX, -uMouseY));
-float remapped = remap(mouseDistance, 60. + random, 800., 1., 0.);
+float remapped = remap(mouseDistance, 60. + random, 400., 1., 0.);
 float eased = cellSizeMin + sineInOut(remapped) * (cellSizeMax - cellSizeMin);
 
 
-// cellSize = eased;
-cellSize = getCellSize(vec3(gridX, gridY, 0.));
+cellSize = eased;
+// cellSize = getCellSize(vec3(gridX, gridY, 0.));

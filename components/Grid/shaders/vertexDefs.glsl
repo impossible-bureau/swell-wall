@@ -60,7 +60,6 @@ float cellSizeMax = 18.;
 float cellSizeMin = 4.;
 float cellSize = 10.;
 
-
 float getCellSize(vec3 point) {
   float rangeMin = max(uScreenWidth, uScreenHeight) * .1;
   float rangeMax = max(uScreenWidth, uScreenHeight) * .3;
